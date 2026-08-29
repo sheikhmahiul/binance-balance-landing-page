@@ -1,6 +1,6 @@
 <?php
 
-// 1. Create writable /tmp storage directories for Vercel serverless functions
+// 1. Create writable /tmp storage directories for Vercel serverless environment
 $dirs = [
     '/tmp/storage/app/public',
     '/tmp/storage/framework/views',
@@ -16,9 +16,11 @@ foreach ($dirs as $dir) {
     }
 }
 
-// 2. Set environment defaults for Vercel execution
+// 2. Set environment defaults for Vercel serverless execution
 putenv('VIEW_COMPILED_PATH=/tmp/views');
 putenv('LOG_CHANNEL=stderr');
+putenv('SESSION_DRIVER=cookie');
+putenv('CACHE_STORE=array');
 
 // Fallback APP_KEY if missing in Vercel environment variables
 if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
@@ -38,17 +40,19 @@ if ($dbConnection === 'sqlite') {
     putenv("DB_DATABASE={$sqlitePath}");
     $_ENV['DB_DATABASE'] = $sqlitePath;
     $_SERVER['DB_DATABASE'] = $sqlitePath;
+
+    // Boot console kernel to run migrations & seeders if database file is fresh/empty
+    if (filesize($sqlitePath) === 0) {
+        try {
+            $app = require __DIR__ . '/../bootstrap/app.php';
+            $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+            $kernel->call('migrate', ['--force' => true]);
+            $kernel->call('db:seed', ['--force' => true]);
+        } catch (\Throwable $e) {
+            // Suppress migration warning if already initialized
+        }
+    }
 }
 
 // 3. Forward request to Laravel's public/index.php
 require __DIR__ . '/../public/index.php';
-
-// 4. Auto-run migrations & seeders if database is empty on Vercel
-try {
-    if (\App\Models\BalancePackage::count() === 0) {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    }
-} catch (\Throwable $e) {
-    // Suppress secondary migration error if already migrated
-}
