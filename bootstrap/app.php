@@ -124,11 +124,29 @@ $app->register(\Illuminate\View\ViewServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
 
+$app->booting(function () use ($app) {
+    if ($config = $app->make('config')) {
+        if (! $config->get('session.driver')) {
+            $config->set('session.driver', 'array');
+        }
+        if (! $config->get('cache.default')) {
+            $config->set('cache.default', 'array');
+        }
+        if (! $config->get('logging.default')) {
+            $config->set('logging.default', 'stderr');
+        }
+        if (! $config->get('database.default')) {
+            $config->set('database.default', 'sqlite');
+        }
+    }
+});
+
 if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
     $app->useStoragePath('/tmp/storage');
 }
 
 return $app;
+
 
 
 
