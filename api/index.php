@@ -69,7 +69,6 @@ if ($isFresh && $dbConnection === 'sqlite') {
 }
 
 // 6. Handle incoming HTTP request
-$request = \Illuminate\Http\Request::capture();
-$response = $app->handleRequest($request);
-$response->send();
+$app->handleRequest(\Illuminate\Http\Request::capture());
+
 
