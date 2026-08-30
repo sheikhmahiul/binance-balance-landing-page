@@ -5,9 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-$isServerless = is_dir('/tmp') || isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']);
-
-if ($isServerless) {
+if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
     $dirs = [
         '/tmp/storage/app/public',
         '/tmp/storage/framework/views',
@@ -21,11 +19,6 @@ if ($isServerless) {
             @mkdir($dir, 0755, true);
         }
     }
-
-    putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
-    putenv('LOG_CHANNEL=stderr');
-    putenv('SESSION_DRIVER=cookie');
-    putenv('CACHE_STORE=array');
 
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
@@ -61,10 +54,17 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-if ($isServerless) {
+if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
     $app->useStoragePath('/tmp/storage');
+    config([
+        'view.compiled' => '/tmp/storage/framework/views',
+        'session.driver' => 'cookie',
+        'cache.default' => 'array',
+        'logging.default' => 'stderr',
+    ]);
 }
 
 return $app;
+
 
 
