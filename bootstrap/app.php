@@ -5,7 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
+if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
     $envKeys = ['SESSION_DRIVER', 'CACHE_STORE', 'CACHE_DRIVER', 'LOG_CHANNEL', 'DB_CONNECTION', 'QUEUE_CONNECTION', 'MAIL_MAILER', 'BROADCAST_CONNECTION'];
     foreach ($envKeys as $key) {
         if (isset($_ENV[$key]) && $_ENV[$key] === '') {
@@ -70,12 +70,13 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
 
     putenv('APP_EVENTS_CACHE=/tmp/storage/framework/events.php');
     $_ENV['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
-$_SERVER['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
+    $_SERVER['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
 
-
-    putenv('SESSION_DRIVER=array');
-    $_ENV['SESSION_DRIVER'] = 'array';
-    $_SERVER['SESSION_DRIVER'] = 'array';
+    if (PHP_SAPI !== 'cli') {
+        putenv('SESSION_DRIVER=array');
+        $_ENV['SESSION_DRIVER'] = 'array';
+        $_SERVER['SESSION_DRIVER'] = 'array';
+    }
 
     putenv('CACHE_STORE=array');
     $_ENV['CACHE_STORE'] = 'array';
@@ -116,8 +117,6 @@ $_SERVER['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
     }
 }
 
-
-
 $app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -133,21 +132,22 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-$app->singleton(\Illuminate\Foundation\PackageManifest::class, fn () => new \Illuminate\Foundation\PackageManifest(
-    new \Illuminate\Filesystem\Filesystem,
-    $app->basePath(),
-    '/tmp/storage/framework/packages.php'
-));
+if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
+    $app->useStoragePath('/tmp/storage');
+    $app->singleton(\Illuminate\Foundation\PackageManifest::class, fn () => new \Illuminate\Foundation\PackageManifest(
+        new \Illuminate\Filesystem\Filesystem,
+        $app->basePath(),
+        '/tmp/storage/framework/packages.php'
+    ));
+}
 
 $app->instance('config_loaded_from_cache', false);
 $app->instance('routes.cached', false);
 $app->instance('events.cached', false);
 
-
 $app->register(\Illuminate\View\ViewServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
-
 
 $app->booting(function () use ($app) {
     if ($config = $app->make('config')) {
@@ -166,20 +166,7 @@ $app->booting(function () use ($app) {
         if (! $config->get('auth.defaults.guard')) {
             $config->set('auth.defaults.guard', 'web');
         }
-
     }
 });
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
-    $app->useStoragePath('/tmp/storage');
-}
-
 return $app;
-
-
-
-
-
-
-
-
