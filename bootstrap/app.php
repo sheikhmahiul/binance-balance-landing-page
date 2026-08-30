@@ -6,6 +6,20 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
 if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
+    $staleCaches = [
+        __DIR__ . '/cache/config.php',
+        __DIR__ . '/cache/routes-v7.php',
+        __DIR__ . '/cache/services.php',
+        __DIR__ . '/cache/packages.php',
+        __DIR__ . '/cache/events.php',
+    ];
+
+    foreach ($staleCaches as $staleCache) {
+        if (file_exists($staleCache)) {
+            @unlink($staleCache);
+        }
+    }
+
     $dirs = [
         '/tmp/storage/app/public',
         '/tmp/storage/framework/views',
@@ -23,6 +37,26 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
     $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
     $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+
+    putenv('APP_CONFIG_CACHE=/tmp/no_config.php');
+    $_ENV['APP_CONFIG_CACHE'] = '/tmp/no_config.php';
+    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/no_config.php';
+
+    putenv('APP_SERVICES_CACHE=/tmp/no_services.php');
+    $_ENV['APP_SERVICES_CACHE'] = '/tmp/no_services.php';
+    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/no_services.php';
+
+    putenv('APP_PACKAGES_CACHE=/tmp/no_packages.php');
+    $_ENV['APP_PACKAGES_CACHE'] = '/tmp/no_packages.php';
+    $_SERVER['APP_PACKAGES_CACHE'] = '/tmp/no_packages.php';
+
+    putenv('APP_ROUTES_CACHE=/tmp/no_routes.php');
+    $_ENV['APP_ROUTES_CACHE'] = '/tmp/no_routes.php';
+    $_SERVER['APP_ROUTES_CACHE'] = '/tmp/no_routes.php';
+
+    putenv('APP_EVENTS_CACHE=/tmp/no_events.php');
+    $_ENV['APP_EVENTS_CACHE'] = '/tmp/no_events.php';
+    $_SERVER['APP_EVENTS_CACHE'] = '/tmp/no_events.php';
 
     if (PHP_SAPI !== 'cli') {
         if (empty(getenv('SESSION_DRIVER')) || empty($_ENV['SESSION_DRIVER'])) {
@@ -58,6 +92,7 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         $_SERVER['DB_DATABASE'] = $sqlitePath;
     }
 }
+
 
 $app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
