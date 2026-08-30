@@ -20,6 +20,10 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         }
     }
 
+    putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+    $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+    $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+
     if (PHP_SAPI !== 'cli') {
         if (empty(getenv('SESSION_DRIVER')) || empty($_ENV['SESSION_DRIVER'])) {
             putenv('SESSION_DRIVER=cookie');
@@ -28,13 +32,6 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         }
     }
 
-
-
-
-
-
-
-
     putenv('CACHE_STORE=array');
     $_ENV['CACHE_STORE'] = 'array';
     $_SERVER['CACHE_STORE'] = 'array';
@@ -42,14 +39,6 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     putenv('LOG_CHANNEL=stderr');
     $_ENV['LOG_CHANNEL'] = 'stderr';
     $_SERVER['LOG_CHANNEL'] = 'stderr';
-
-    putenv('APP_CONFIG_CACHE=/tmp/non_existent_config.php');
-    $_ENV['APP_CONFIG_CACHE'] = '/tmp/non_existent_config.php';
-    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/non_existent_config.php';
-
-    putenv('APP_SERVICES_CACHE=/tmp/non_existent_services.php');
-    $_ENV['APP_SERVICES_CACHE'] = '/tmp/non_existent_services.php';
-    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/non_existent_services.php';
 
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
