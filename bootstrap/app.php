@@ -38,6 +38,7 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         '/tmp/storage/framework/views',
         '/tmp/storage/framework/sessions',
         '/tmp/storage/framework/cache/data',
+        '/tmp/storage/framework',
         '/tmp/storage/logs',
     ];
 
@@ -50,6 +51,27 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
     $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
     $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+
+    putenv('APP_PACKAGES_CACHE=/tmp/storage/framework/packages.php');
+    $_ENV['APP_PACKAGES_CACHE'] = '/tmp/storage/framework/packages.php';
+    $_SERVER['APP_PACKAGES_CACHE'] = '/tmp/storage/framework/packages.php';
+
+    putenv('APP_SERVICES_CACHE=/tmp/storage/framework/services.php');
+    $_ENV['APP_SERVICES_CACHE'] = '/tmp/storage/framework/services.php';
+    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/storage/framework/services.php';
+
+    putenv('APP_CONFIG_CACHE=/tmp/storage/framework/config.php');
+    $_ENV['APP_CONFIG_CACHE'] = '/tmp/storage/framework/config.php';
+    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/storage/framework/config.php';
+
+    putenv('APP_ROUTES_CACHE=/tmp/storage/framework/routes-v7.php');
+    $_ENV['APP_ROUTES_CACHE'] = '/tmp/storage/framework/routes-v7.php';
+    $_SERVER['APP_ROUTES_CACHE'] = '/tmp/storage/framework/routes-v7.php';
+
+    putenv('APP_EVENTS_CACHE=/tmp/storage/framework/events.php');
+    $_ENV['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
+$_SERVER['APP_EVENTS_CACHE'] = '/tmp/storage/framework/events.php';
+
 
     putenv('SESSION_DRIVER=array');
     $_ENV['SESSION_DRIVER'] = 'array';
