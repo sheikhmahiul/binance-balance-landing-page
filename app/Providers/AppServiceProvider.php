@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+        if (is_dir('/tmp') || isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
             try {
                 if (!\Illuminate\Support\Facades\Schema::hasTable('balance_packages')) {
                     \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
             }
         }
     }
+
 
 }

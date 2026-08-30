@@ -5,7 +5,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+$isServerless = is_dir('/tmp') || isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']);
+
+if ($isServerless) {
     $dirs = [
         '/tmp/storage/app/public',
         '/tmp/storage/framework/views',
@@ -59,9 +61,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+if ($isServerless) {
     $app->useStoragePath('/tmp/storage');
 }
 
 return $app;
+
 
