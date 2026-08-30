@@ -19,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
+        if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows' || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
             try {
                 $dbPath = config('database.connections.sqlite.database');
                 if ($dbPath && is_string($dbPath) && !file_exists($dbPath)) {
@@ -34,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
             }
         }
     }
+
 
 
 

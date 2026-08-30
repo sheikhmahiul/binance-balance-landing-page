@@ -14,18 +14,49 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Tailwind CSS CDN Fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'binance-yellow': '#F0B90D',
+                        'crypto-green': '#0ECB81',
+                        'crypto-red': '#F6465D',
+                        'exchange-dark': '#0B0E11',
+                        'exchange-card': '#181A20',
+                        'exchange-hover': '#2B313A',
+                        'exchange-border': '#2B313A'
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Alpine.js for dynamic interactive states -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Tailwind / Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
     <style>
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        svg:not([class*="w-"]) {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #0B0E11;
             color: #EAECF0;
         }
+
         .font-mono {
             font-family: 'JetBrains Mono', monospace;
         }
