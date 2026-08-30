@@ -9,9 +9,15 @@ class LandingController extends Controller
 {
     public function index()
     {
-        $package = BalancePackage::where('is_active', true)->first();
+        $package = null;
 
-        // Fallback default package if DB not seeded yet
+        try {
+            $package = BalancePackage::where('is_active', true)->first();
+        } catch (\Throwable $e) {
+            // DB connection or table missing, use default fallback package
+        }
+
+        // Fallback default package if DB query fails or not seeded yet
         if (!$package) {
             $package = (object) [
                 'id' => 1,
@@ -26,4 +32,5 @@ class LandingController extends Controller
 
         return view('landing', compact('package'));
     }
+
 }

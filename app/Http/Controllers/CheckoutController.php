@@ -11,18 +11,33 @@ class CheckoutController extends Controller
 {
     public function show($id)
     {
-        $package = BalancePackage::find($id);
+        $package = null;
 
-        if (!$package) {
-            $package = BalancePackage::where('is_active', true)->first();
+        try {
+            $package = BalancePackage::find($id);
+
+            if (!$package) {
+                $package = BalancePackage::where('is_active', true)->first();
+            }
+        } catch (\Throwable $e) {
+            // DB connection or table missing, use default fallback package
         }
 
         if (!$package) {
-            return redirect()->route('landing')->with('error', 'Package not found.');
+            $package = (object) [
+                'id' => 1,
+                'name' => 'ACCESS PASS',
+                'virtual_balance' => 'unlimited simulated balance',
+                'price' => 20.00,
+                'currency' => 'USDT',
+                'description' => 'Manual TRC20 payment verification required before access is granted.',
+                'is_active' => true,
+            ];
         }
 
         return view('checkout', compact('package'));
     }
+
 
     public function store(Request $request, $id)
     {
