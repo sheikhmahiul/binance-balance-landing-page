@@ -5,6 +5,45 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
+if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+    $dirs = [
+        '/tmp/storage/app/public',
+        '/tmp/storage/framework/views',
+        '/tmp/storage/framework/sessions',
+        '/tmp/storage/framework/cache/data',
+        '/tmp/storage/logs',
+    ];
+
+    foreach ($dirs as $dir) {
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+    }
+
+    putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+    putenv('LOG_CHANNEL=stderr');
+    putenv('SESSION_DRIVER=cookie');
+    putenv('CACHE_STORE=array');
+
+    if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
+        $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
+        putenv("APP_KEY={$fallbackKey}");
+        $_ENV['APP_KEY'] = $fallbackKey;
+        $_SERVER['APP_KEY'] = $fallbackKey;
+    }
+
+    $dbConnection = getenv('DB_CONNECTION') ?: ($_ENV['DB_CONNECTION'] ?? 'sqlite');
+    if ($dbConnection === 'sqlite') {
+        $sqlitePath = '/tmp/database.sqlite';
+        if (!file_exists($sqlitePath)) {
+            @touch($sqlitePath);
+        }
+        putenv("DB_DATABASE={$sqlitePath}");
+        $_ENV['DB_DATABASE'] = $sqlitePath;
+        $_SERVER['DB_DATABASE'] = $sqlitePath;
+    }
+}
+
 $app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -25,3 +64,4 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
 }
 
 return $app;
+
