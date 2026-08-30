@@ -74,11 +74,16 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
+$app->register(\Illuminate\View\ViewServiceProvider::class);
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
+$app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+
 if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
     $app->useStoragePath('/tmp/storage');
 }
 
 return $app;
+
 
 
 
