@@ -5,7 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
     $dirs = [
         '/tmp/storage/app/public',
         '/tmp/storage/framework/views',
@@ -21,15 +21,28 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
     }
 
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
-    putenv('APP_CONFIG_CACHE=/tmp/non_existent_config.php');
-    putenv('APP_SERVICES_CACHE=/tmp/non_existent_services.php');
-    putenv('APP_PACKAGES_CACHE=/tmp/non_existent_packages.php');
-    putenv('APP_ROUTES_CACHE=/tmp/non_existent_routes.php');
-    putenv('APP_EVENTS_CACHE=/tmp/non_existent_events.php');
-    putenv('LOG_CHANNEL=stderr');
-    putenv('SESSION_DRIVER=cookie');
-    putenv('CACHE_STORE=array');
+    $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+    $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 
+
+
+
+
+    putenv('CACHE_STORE=array');
+    $_ENV['CACHE_STORE'] = 'array';
+    $_SERVER['CACHE_STORE'] = 'array';
+
+    putenv('LOG_CHANNEL=stderr');
+    $_ENV['LOG_CHANNEL'] = 'stderr';
+    $_SERVER['LOG_CHANNEL'] = 'stderr';
+
+    putenv('APP_CONFIG_CACHE=/tmp/non_existent_config.php');
+    $_ENV['APP_CONFIG_CACHE'] = '/tmp/non_existent_config.php';
+    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/non_existent_config.php';
+
+    putenv('APP_SERVICES_CACHE=/tmp/non_existent_services.php');
+    $_ENV['APP_SERVICES_CACHE'] = '/tmp/non_existent_services.php';
+    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/non_existent_services.php';
 
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
@@ -65,11 +78,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
     $app->useStoragePath('/tmp/storage');
 }
 
 return $app;
+
 
 
 
