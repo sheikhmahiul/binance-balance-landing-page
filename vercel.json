@@ -2,7 +2,7 @@
     "version": 2,
     "framework": null,
     "functions": {
-        "api/index.php": {
+        "api/*.php": {
             "runtime": "vercel-php@0.7.3"
         }
     },
@@ -31,8 +31,10 @@
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "true",
+        "APP_KEY": "base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=",
         "LOG_CHANNEL": "stderr"
     }
 }
+
 
 
