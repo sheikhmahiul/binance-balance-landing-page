@@ -134,6 +134,10 @@ $app->booting(function () use ($app) {
         if (! $config->get('database.default')) {
             $config->set('database.default', 'sqlite');
         }
+        if (! $config->get('auth.defaults.guard')) {
+            $config->set('auth.defaults.guard', 'web');
+        }
+
     }
 });
 
