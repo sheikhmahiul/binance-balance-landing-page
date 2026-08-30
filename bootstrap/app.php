@@ -20,9 +20,16 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         }
     }
 
-    putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
-    $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
-    $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
+    if (PHP_SAPI !== 'cli') {
+        if (empty(getenv('SESSION_DRIVER')) || empty($_ENV['SESSION_DRIVER'])) {
+            putenv('SESSION_DRIVER=cookie');
+            $_ENV['SESSION_DRIVER'] = 'cookie';
+            $_SERVER['SESSION_DRIVER'] = 'cookie';
+        }
+    }
+
+
+
 
 
 
