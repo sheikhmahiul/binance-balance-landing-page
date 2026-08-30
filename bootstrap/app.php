@@ -64,14 +64,26 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         $_SERVER['SESSION_DRIVER'] = 'array';
     }
 
-
     putenv('CACHE_STORE=array');
     $_ENV['CACHE_STORE'] = 'array';
     $_SERVER['CACHE_STORE'] = 'array';
 
+    putenv('CACHE_DRIVER=array');
+    $_ENV['CACHE_DRIVER'] = 'array';
+    $_SERVER['CACHE_DRIVER'] = 'array';
+
     putenv('LOG_CHANNEL=stderr');
     $_ENV['LOG_CHANNEL'] = 'stderr';
     $_SERVER['LOG_CHANNEL'] = 'stderr';
+
+    putenv('QUEUE_CONNECTION=sync');
+    $_ENV['QUEUE_CONNECTION'] = 'sync';
+    $_SERVER['QUEUE_CONNECTION'] = 'sync';
+
+    putenv('MAIL_MAILER=log');
+    $_ENV['MAIL_MAILER'] = 'log';
+    $_SERVER['MAIL_MAILER'] = 'log';
+
 
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';

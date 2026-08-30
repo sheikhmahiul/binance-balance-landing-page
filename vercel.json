@@ -33,11 +33,16 @@
         "APP_DEBUG": "true",
         "APP_KEY": "base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=",
         "SESSION_DRIVER": "array",
-
         "CACHE_STORE": "array",
-        "LOG_CHANNEL": "stderr"
+        "CACHE_DRIVER": "array",
+        "LOG_CHANNEL": "stderr",
+        "DB_CONNECTION": "sqlite",
+        "DB_DATABASE": "/tmp/database.sqlite",
+        "QUEUE_CONNECTION": "sync",
+        "MAIL_MAILER": "log"
     }
 }
+
 
 
 
