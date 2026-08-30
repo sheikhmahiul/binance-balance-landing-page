@@ -1,12 +1,20 @@
 {
     "version": 2,
     "framework": null,
-    "outputDirectory": ".",
-    "functions": {
-        "api/index.php": {
-            "runtime": "vercel-php@0.7.3"
+    "builds": [
+        {
+            "src": "api/index.php",
+            "use": "vercel-php@0.7.3"
+        },
+        {
+            "src": "public/build/**",
+            "use": "@vercel/static"
+        },
+        {
+            "src": "public/images/**",
+            "use": "@vercel/static"
         }
-    },
+    ],
     "routes": [
         {
             "src": "/build/(.*)",
@@ -36,6 +44,7 @@
         "LOG_CHANNEL": "stderr"
     }
 }
+
 
 
 
