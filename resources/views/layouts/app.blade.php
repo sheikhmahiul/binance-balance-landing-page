@@ -8,6 +8,12 @@
     <title>Binance balance | Virtual Crypto Trading Simulation</title>
     <meta name="description" content="Get virtual live Binance balance for marketing and promoting.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

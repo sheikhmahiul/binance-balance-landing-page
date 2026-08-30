@@ -31,7 +31,6 @@
             <!-- Center Nav -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
                 <a href="#markets" class="hover:text-binance-yellow transition-colors">Markets</a>
-                <a href="#trading" class="hover:text-binance-yellow transition-colors">Trading</a>
                 <a href="#pricing" class="hover:text-binance-yellow transition-colors">Pricing</a>
             </nav>
 
@@ -74,13 +73,14 @@
                 <!-- Badge -->
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-binance-yellow/10 border border-binance-yellow/30 text-binance-yellow text-xs font-bold tracking-widest uppercase">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    TRADING ACCESS
+                    SIMULATION ACCESS
                 </div>
 
                 <!-- Headline -->
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight">
-                    Activate Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500">Binance Virtual Live Trading Balance</span>
+                    Activate Your <span class="text-binance-yellow">Binance</span> <span class="text-white">Virtual Live Balance</span>
                 </h1>
+
 
                 <!-- Subheading -->
                 <p class="text-lg sm:text-xl text-gray-400 font-normal leading-relaxed">

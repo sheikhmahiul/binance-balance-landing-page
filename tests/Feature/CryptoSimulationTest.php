@@ -31,8 +31,10 @@ class CryptoSimulationTest extends TestCase
         $response = $this->get('/');
 
         $response->assertSee('Activate Your');
-        $response->assertSee('Binance Virtual Live Trading Balance');
+        $response->assertSee('Binance');
+        $response->assertSee('Virtual Live Balance');
         $response->assertSee('ACCESS PASS');
+
 
 
 
