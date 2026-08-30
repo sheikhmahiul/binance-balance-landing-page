@@ -19,17 +19,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (is_dir('/tmp') || isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
+        if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
             try {
+                $dbPath = config('database.connections.sqlite.database');
+                if ($dbPath && is_string($dbPath) && !file_exists($dbPath)) {
+                    @touch($dbPath);
+                }
                 if (!\Illuminate\Support\Facades\Schema::hasTable('balance_packages')) {
                     \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
                     \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
                 }
             } catch (\Throwable $e) {
-                // Ignore migration errors if already initialized
+                // Fail-safe migration check
             }
         }
     }
+
 
 
 }

@@ -150,23 +150,31 @@ $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 $app->booting(function () use ($app) {
-    if ($config = $app->make('config')) {
-        if (! $config->get('session.driver')) {
-            $config->set('session.driver', 'array');
+    $sqlitePath = '/tmp/database.sqlite';
+    if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
+        if (!file_exists($sqlitePath)) {
+            @touch($sqlitePath);
         }
-        if (! $config->get('cache.default')) {
-            $config->set('cache.default', 'array');
-        }
-        if (! $config->get('logging.default')) {
-            $config->set('logging.default', 'stderr');
-        }
-        if (! $config->get('database.default')) {
-            $config->set('database.default', 'sqlite');
-        }
-        if (! $config->get('auth.defaults.guard')) {
-            $config->set('auth.defaults.guard', 'web');
-        }
+    } else {
+        $sqlitePath = database_path('database.sqlite');
     }
+
+    config([
+        'database.default' => config('database.default') ?: 'sqlite',
+        'database.connections.sqlite' => array_merge([
+            'driver' => 'sqlite',
+            'url' => null,
+            'database' => $sqlitePath,
+            'prefix' => '',
+            'foreign_key_constraints' => true,
+        ], config('database.connections.sqlite', [])),
+        'session.driver' => config('session.driver') ?: 'array',
+        'cache.default' => config('cache.default') ?: 'array',
+        'logging.default' => config('logging.default') ?: 'stderr',
+        'auth.defaults.guard' => config('auth.defaults.guard') ?: 'web',
+        'auth.defaults.passwords' => config('auth.defaults.passwords') ?: 'users',
+    ]);
 });
+
 
 return $app;
