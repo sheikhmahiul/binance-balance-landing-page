@@ -133,9 +133,16 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
+$app->singleton(\Illuminate\Foundation\PackageManifest::class, fn () => new \Illuminate\Foundation\PackageManifest(
+    new \Illuminate\Filesystem\Filesystem,
+    $app->basePath(),
+    '/tmp/storage/framework/packages.php'
+));
+
 $app->instance('config_loaded_from_cache', false);
 $app->instance('routes.cached', false);
 $app->instance('events.cached', false);
+
 
 $app->register(\Illuminate\View\ViewServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
