@@ -6,7 +6,19 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
 if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
-    $envKeys = ['SESSION_DRIVER', 'CACHE_STORE', 'CACHE_DRIVER', 'LOG_CHANNEL', 'DB_CONNECTION', 'QUEUE_CONNECTION', 'MAIL_MAILER', 'BROADCAST_CONNECTION'];
+    $envKeys = [
+        'SESSION_DRIVER',
+        'CACHE_STORE',
+        'CACHE_DRIVER',
+        'LOG_CHANNEL',
+        'DB_CONNECTION',
+        'QUEUE_CONNECTION',
+        'MAIL_MAILER',
+        'BROADCAST_CONNECTION',
+        'FILESYSTEM_DISK',
+        'APP_MAINTENANCE_DRIVER',
+        'AUTH_GUARD',
+    ];
     foreach ($envKeys as $key) {
         if (isset($_ENV[$key]) && $_ENV[$key] === '') {
             unset($_ENV[$key]);
@@ -98,6 +110,10 @@ if (is_dir('/tmp') || PHP_OS_FAMILY !== 'Windows') {
     $_ENV['MAIL_MAILER'] = 'log';
     $_SERVER['MAIL_MAILER'] = 'log';
 
+    putenv('FILESYSTEM_DISK=local');
+    $_ENV['FILESYSTEM_DISK'] = 'local';
+    $_SERVER['FILESYSTEM_DISK'] = 'local';
+
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
         putenv("APP_KEY={$fallbackKey}");
@@ -173,8 +189,11 @@ $app->booting(function () use ($app) {
         'logging.default' => config('logging.default') ?: 'stderr',
         'auth.defaults.guard' => config('auth.defaults.guard') ?: 'web',
         'auth.defaults.passwords' => config('auth.defaults.passwords') ?: 'users',
+        'filesystems.default' => config('filesystems.default') ?: 'local',
+        'app.maintenance.driver' => config('app.maintenance.driver') ?: 'file',
+        'hashing.driver' => config('hashing.driver') ?: 'bcrypt',
     ]);
 });
 
-
 return $app;
+
