@@ -21,9 +21,15 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL'])) {
     }
 
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+    putenv('APP_CONFIG_CACHE=/tmp/non_existent_config.php');
+    putenv('APP_SERVICES_CACHE=/tmp/non_existent_services.php');
+    putenv('APP_PACKAGES_CACHE=/tmp/non_existent_packages.php');
+    putenv('APP_ROUTES_CACHE=/tmp/non_existent_routes.php');
+    putenv('APP_EVENTS_CACHE=/tmp/non_existent_events.php');
     putenv('LOG_CHANNEL=stderr');
     putenv('SESSION_DRIVER=cookie');
     putenv('CACHE_STORE=array');
+
 
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
