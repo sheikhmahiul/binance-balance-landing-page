@@ -68,7 +68,18 @@ if ($isFresh && $dbConnection === 'sqlite') {
     }
 }
 
-// 6. Handle incoming HTTP request
-$app->handleRequest(\Illuminate\Http\Request::capture());
+// 6. Handle incoming HTTP request with exception reporting for Vercel
+try {
+    $request = \Illuminate\Http\Request::capture();
+    $app->handleRequest($request);
+} catch (\Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: text/html; charset=utf-8');
+    echo "<h2>Laravel Serverless Exception</h2>";
+    echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . " (Line " . $e->getLine() . ")</p>";
+    echo "<pre style='background:#111;color:#f88;padding:15px;border-radius:6px;overflow:auto;'>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+}
+
 
 
