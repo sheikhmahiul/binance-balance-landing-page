@@ -6,6 +6,19 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
 if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || is_dir('/tmp')) {
+    $envKeys = ['SESSION_DRIVER', 'CACHE_STORE', 'CACHE_DRIVER', 'LOG_CHANNEL', 'DB_CONNECTION', 'QUEUE_CONNECTION', 'MAIL_MAILER', 'BROADCAST_CONNECTION'];
+    foreach ($envKeys as $key) {
+        if (isset($_ENV[$key]) && $_ENV[$key] === '') {
+            unset($_ENV[$key]);
+        }
+        if (isset($_SERVER[$key]) && $_SERVER[$key] === '') {
+            unset($_SERVER[$key]);
+        }
+        if (getenv($key) === '') {
+            putenv($key);
+        }
+    }
+
     $staleCaches = [
         __DIR__ . '/cache/config.php',
         __DIR__ . '/cache/routes-v7.php',
@@ -38,31 +51,9 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     $_ENV['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
     $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/storage/framework/views';
 
-    putenv('APP_CONFIG_CACHE=/tmp/no_config.php');
-    $_ENV['APP_CONFIG_CACHE'] = '/tmp/no_config.php';
-    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/no_config.php';
-
-    putenv('APP_SERVICES_CACHE=/tmp/no_services.php');
-    $_ENV['APP_SERVICES_CACHE'] = '/tmp/no_services.php';
-    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/no_services.php';
-
-    putenv('APP_PACKAGES_CACHE=/tmp/no_packages.php');
-    $_ENV['APP_PACKAGES_CACHE'] = '/tmp/no_packages.php';
-    $_SERVER['APP_PACKAGES_CACHE'] = '/tmp/no_packages.php';
-
-    putenv('APP_ROUTES_CACHE=/tmp/no_routes.php');
-    $_ENV['APP_ROUTES_CACHE'] = '/tmp/no_routes.php';
-    $_SERVER['APP_ROUTES_CACHE'] = '/tmp/no_routes.php';
-
-    putenv('APP_EVENTS_CACHE=/tmp/no_events.php');
-    $_ENV['APP_EVENTS_CACHE'] = '/tmp/no_events.php';
-    $_SERVER['APP_EVENTS_CACHE'] = '/tmp/no_events.php';
-
-    if (PHP_SAPI !== 'cli') {
-        putenv('SESSION_DRIVER=array');
-        $_ENV['SESSION_DRIVER'] = 'array';
-        $_SERVER['SESSION_DRIVER'] = 'array';
-    }
+    putenv('SESSION_DRIVER=array');
+    $_ENV['SESSION_DRIVER'] = 'array';
+    $_SERVER['SESSION_DRIVER'] = 'array';
 
     putenv('CACHE_STORE=array');
     $_ENV['CACHE_STORE'] = 'array';
@@ -84,7 +75,6 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     $_ENV['MAIL_MAILER'] = 'log';
     $_SERVER['MAIL_MAILER'] = 'log';
 
-
     if (!getenv('APP_KEY') && empty($_ENV['APP_KEY'])) {
         $fallbackKey = 'base64:y4w87HLEXPHwl6HNufIF4+E+sMeef9OPT8srgErDTSQ=';
         putenv("APP_KEY={$fallbackKey}");
@@ -103,6 +93,7 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
         $_SERVER['DB_DATABASE'] = $sqlitePath;
     }
 }
+
 
 
 $app = Application::configure(basePath: dirname(__DIR__))
