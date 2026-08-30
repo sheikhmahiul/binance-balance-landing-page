@@ -1,7 +1,8 @@
 <?php
 
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
+echo "PHP Hello World on Vercel";
+exit;
+
 
 if (!defined('LARAVEL_START')) {
     define('LARAVEL_START', microtime(true));
