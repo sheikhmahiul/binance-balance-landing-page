@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_GET['debug_env'])) {
+if (isset($_SERVER['HTTP_X_DEBUG_ENV']) || isset($_GET['debug_env'])) {
     header('Content-Type: text/plain');
     echo "PHP_SAPI: " . PHP_SAPI . "\n";
     echo "PHP_OS_FAMILY: " . PHP_OS_FAMILY . "\n";
@@ -8,6 +8,7 @@ if (isset($_GET['debug_env'])) {
     print_r($_ENV);
     exit;
 }
+
 
 require __DIR__ . '/../public/index.php';
 
