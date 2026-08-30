@@ -1,19 +1,11 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "api/index.php",
-            "use": "vercel-php@0.7.3"
-        },
-        {
-            "src": "public/build/**",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "public/images/**",
-            "use": "@vercel/static"
+    "framework": null,
+    "functions": {
+        "api/index.php": {
+            "runtime": "vercel-php@0.7.3"
         }
-    ],
+    },
     "routes": [
         {
             "src": "/build/(.*)",
@@ -32,7 +24,7 @@
             "dest": "/public/robots.txt"
         },
         {
-            "src": "(.*)",
+            "src": "/(.*)",
             "dest": "/api/index.php"
         }
     ],
@@ -46,3 +38,4 @@
         "VIEW_COMPILED_PATH": "/tmp/views"
     }
 }
+
