@@ -120,9 +120,14 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
+$app->instance('config_loaded_from_cache', false);
+$app->instance('routes.cached', false);
+$app->instance('events.cached', false);
+
 $app->register(\Illuminate\View\ViewServiceProvider::class);
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\Filesystem\FilesystemServiceProvider::class);
+
 
 $app->booting(function () use ($app) {
     if ($config = $app->make('config')) {
