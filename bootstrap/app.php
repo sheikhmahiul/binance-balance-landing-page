@@ -59,12 +59,11 @@ if (isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']) || i
     $_SERVER['APP_EVENTS_CACHE'] = '/tmp/no_events.php';
 
     if (PHP_SAPI !== 'cli') {
-        if (empty(getenv('SESSION_DRIVER')) || empty($_ENV['SESSION_DRIVER'])) {
-            putenv('SESSION_DRIVER=cookie');
-            $_ENV['SESSION_DRIVER'] = 'cookie';
-            $_SERVER['SESSION_DRIVER'] = 'cookie';
-        }
+        putenv('SESSION_DRIVER=array');
+        $_ENV['SESSION_DRIVER'] = 'array';
+        $_SERVER['SESSION_DRIVER'] = 'array';
     }
+
 
     putenv('CACHE_STORE=array');
     $_ENV['CACHE_STORE'] = 'array';
